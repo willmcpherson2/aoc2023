@@ -1,3 +1,5 @@
+module Day2_1
+
 TEST1 = "Game 49: 1 blue, 2 red; 3 green; 4 blue"
 TEST2 = "Game 49: 2 red; 2 red, 9 blue; 4 blue, 1 green"
 TEST3 = <<-EOF
@@ -16,7 +18,7 @@ GAME = Regexp.new(/Game (\d+):(.*)/)
 SET = Regexp.new(/( .*?)(;|\z)/)
 DRAW = Regexp.new(/( (\d+) (red|green|blue))(,|\z)/)
 
-def parse_game(s)
+def self.parse_game(s)
   game = GAME.match(s)
   game_id = game[1].to_i
   sets =
@@ -33,11 +35,11 @@ LIMITS = {
   "blue"=>14,
 }
 
-def set_impossible(set)
+def self.set_impossible(set)
   set.any? { |draw| draw[:num] > LIMITS[draw[:colour]] }
 end
 
-def line_to_possible_game_id(line)
+def self.line_to_possible_game_id(line)
   game = parse_game(line)
   impossible = game[:sets].any? { |set| set_impossible(set) }
   if impossible
@@ -47,11 +49,13 @@ def line_to_possible_game_id(line)
   end
 end
 
-def main
+def self.main
   File
     .read("input/day2.txt")
     .lines("\n")
     .map { |line| line_to_possible_game_id(line) }
     .compact
     .sum
+end
+
 end
