@@ -6,13 +6,11 @@ def parse_digits(line)
     .map { |matches| matches.find_index { |match| match.nil?.! } + 1 }
 end
 
-def sum_of_first_and_last_digits
+def main
   File
-    .read("day1.txt")
+    .read("input/day1.txt")
     .lines("\n")
     .map { |line| parse_digits(line) }
     .map { |digits| "#{digits.first}#{digits.last}".to_i }
     .sum
 end
-
-puts sum_of_first_and_last_digits
