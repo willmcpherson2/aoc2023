@@ -20,19 +20,21 @@ $..1
 EOF
 
 def self.main
-  schematic =
-    File
-      .read("input/day3.txt")
-      .lines
-      .map { |line| line.chars.map { |char| char_type(char) } }
-      .each_with_index
-      .reduce({}) { |schematic, (line, y)| schematic.merge(line.each_with_index.reduce({}) { |schematic, (char, x)| schematic.merge([x, y] => char) }) }
+  schematic = get_schematic(File.read("input/day3.txt"))
   schematic
     .map { |char| mark_as_part(schematic, char) }
     .chunk { |char| char[:type] == :char }
     .map { |is_char, chars| is_char ? make_part(chars) : nil }
     .compact
     .sum
+end
+
+def self.get_schematic(s)
+  s
+    .lines
+    .map { |line| line.chars.map { |char| char_type(char) } }
+    .each_with_index
+    .reduce({}) { |schematic, (line, y)| schematic.merge(line.each_with_index.reduce({}) { |schematic, (char, x)| schematic.merge([x, y] => char) }) }
 end
 
 def self.make_part(chars)
@@ -71,6 +73,7 @@ end
 DIGIT = Regexp.new(/\d/)
 EMPTY = Regexp.new(/\./)
 NEWLINE = Regexp.new(/\n/)
+GEAR = Regexp.new(/\*/)
 
 def self.char_type(char)
   if char =~ DIGIT
@@ -79,6 +82,8 @@ def self.char_type(char)
     {type: :empty}
   elsif char =~ NEWLINE
     {type: :newline}
+  elsif char =~ GEAR
+    {type: :symbol, gear: true}
   else
     {type: :symbol}
   end
